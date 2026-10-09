@@ -28,8 +28,8 @@ export default function Index() {
     <ScrollView style={styles.container}>
       {data?.map((post) => {
         return (
-          <Link href={`/post/${post.id}` as any} key={post.id}>
-            <View style={styles.post}>
+          <Link style={styles.post} href={`/post/${post.id}`} key={post.id}>
+            <View>
               <Text style={styles.title}>{post.title}</Text>
               <Text style={styles.author}>{post.body}</Text>
             </View>
@@ -43,7 +43,7 @@ export default function Index() {
             title: "ExpressJS is shit",
             body: "Hono is the best most amazing life force. Happy sky.",
             author: "Hono Team",
-            publishedAt: new Date("2026-03-04T00:00:00.000Z"),
+            publishedAt: "2026-03-04T00:00:00.000Z",
           })
         }></Button>
     </ScrollView>
