@@ -26,7 +26,7 @@ export default function Index() {
       const res = await fetch("http://localhost:3000/v1/api/posts", {
         method: "POST",
         headers: {
-          "content-typ": "application/json",
+          "content-type": "application/json",
         },
         body: JSON.stringify({
           title: "Express no more ",
