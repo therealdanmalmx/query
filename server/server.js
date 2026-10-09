@@ -33,10 +33,14 @@ const posts = [
   },
 ];
 
-app.get("/v1/api/posts", (c) => c.json(posts));
+app.get("/v1/api/posts", async (c) => c.json(posts, 200));
 
-app.post("/v1/api/posts", (c) => {
-  c.json(newPost);
+app.post("/v1/api/posts", async (c) => {
+  const data = await c.req.json();
+  const newPost = { id: Date.now(), ...data };
+  posts.push(post);
+
+  return c.json(newPost, 201);
 });
 
 serve(app);

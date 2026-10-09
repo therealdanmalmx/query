@@ -1,6 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Link } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
+import { Button, StyleSheet, Text, View } from "react-native";
 
 interface Post {
   id: number;
@@ -9,6 +9,7 @@ interface Post {
   author: string;
   publishedAt: Date;
 }
+type PostCreate = Omit<Post, "id">;
 
 export default function Index() {
   const { data, isError, error, isLoading } = useQuery({
@@ -16,6 +17,26 @@ export default function Index() {
     queryFn: async () => {
       const res = await fetch("http://localhost:3000/v1/api/posts");
       return (await res.json()) as Promise<Post[]>;
+    },
+  });
+
+  const { mutate: createPost } = useMutation({
+    mutationKey: ["posts"],
+    mutationFn: async () => {
+      const res = await fetch("http://localhost:3000/v1/api/posts", {
+        method: "POST",
+        headers: {
+          "content-typ": "application/json",
+        },
+        body: JSON.stringify({
+          title: "Express no more ",
+          body: "Don't use expressjs any longer. Hono is king",
+          author: "Hono Team",
+          publishedAt: new Date(),
+        } satisfies PostCreate),
+      });
+
+      return res.json();
     },
   });
 
@@ -37,6 +58,7 @@ export default function Index() {
           </Link>
         );
       })}
+      <Button title='Skapa inlägg' onPress={() => createPost()}></Button>
     </View>
   );
 }
