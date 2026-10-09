@@ -1,0 +1,11 @@
+{
+  "name": "hono",
+  "type": "module",
+  "dependencies": {
+    "@hono/node-server": "^2.1.4",
+    "hono": "^4.13.13"
+  },
+  "scripts": {
+    "dev": "node --watch server.js"
+  }
+}
