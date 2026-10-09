@@ -35,4 +35,8 @@ const posts = [
 
 app.get("/v1/api/posts", (c) => c.json(posts));
 
+app.post("/v1/api/posts", (c) => {
+  c.json(newPost);
+});
+
 serve(app);

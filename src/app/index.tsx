@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 
 interface Post {
@@ -28,10 +29,12 @@ export default function Index() {
     <View style={styles.container}>
       {data?.map((post) => {
         return (
-          <View key={post.id} style={styles.post}>
-            <Text style={styles.title}>{post.title}</Text>
-            <Text style={styles.author}>{post.body}</Text>
-          </View>
+          <Link href={`/post/${post.id}` as any} key={post.id}>
+            <View style={styles.post}>
+              <Text style={styles.title}>{post.title}</Text>
+              <Text style={styles.author}>{post.body}</Text>
+            </View>
+          </Link>
         );
       })}
     </View>
@@ -42,6 +45,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 12,
+    width: "100%",
   },
   post: {
     padding: 12,
