@@ -1,42 +1,20 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { createPost, getPosts } from "@/api/posts";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "expo-router";
-import { Button, StyleSheet, Text, View } from "react-native";
-
-interface Post {
-  id: number;
-  title: string;
-  body: string;
-  author: string;
-  publishedAt: Date;
-}
-type PostCreate = Omit<Post, "id">;
+import { Button, ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function Index() {
+  const client = useQueryClient();
   const { data, isError, error, isLoading } = useQuery({
     queryKey: ["posts"],
-    queryFn: async () => {
-      const res = await fetch("http://localhost:3000/v1/api/posts");
-      return (await res.json()) as Promise<Post[]>;
-    },
+    queryFn: getPosts,
   });
 
-  const { mutate: createPost } = useMutation({
+  const mutation = useMutation({
     mutationKey: ["posts"],
-    mutationFn: async () => {
-      const res = await fetch("http://localhost:3000/v1/api/posts", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({
-          title: "Express no more ",
-          body: "Don't use expressjs any longer. Hono is king",
-          author: "Hono Team",
-          publishedAt: new Date(),
-        } satisfies PostCreate),
-      });
-
-      return res.json();
+    mutationFn: createPost,
+    onSuccess: async () => {
+      await client.invalidateQueries({ queryKey: ["posts"] });
     },
   });
 
@@ -47,7 +25,7 @@ export default function Index() {
     return <Text>{`Error: ${error.message}`}</Text>;
   }
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       {data?.map((post) => {
         return (
           <Link href={`/post/${post.id}` as any} key={post.id}>
@@ -58,8 +36,17 @@ export default function Index() {
           </Link>
         );
       })}
-      <Button title='Skapa inlägg' onPress={() => createPost()}></Button>
-    </View>
+      <Button
+        title='Skapa inlägg'
+        onPress={() =>
+          mutation.mutate({
+            title: "ExpressJS is shit",
+            body: "Hono is the best most amazing life force. Happy sky.",
+            author: "Hono Team",
+            publishedAt: new Date("2026-03-04T00:00:00.000Z"),
+          })
+        }></Button>
+    </ScrollView>
   );
 }
 

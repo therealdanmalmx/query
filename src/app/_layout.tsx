@@ -8,7 +8,7 @@ export default function RootLayout() {
   UseQueryFocus();
   return (
     <QueryClientProvider client={client}>
-      <Stack />
+      <Stack screenOptions={{ title: "Blog" }} />
     </QueryClientProvider>
   );
 }
