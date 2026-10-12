@@ -1,6 +1,9 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
-const app = new Hono();
+import { cors } from "hono/cors";
+import { auth } from "./lib/auth.ts";
+
+const app = new Hono().basePath("/v1");
 
 const posts = [
   {
@@ -33,9 +36,19 @@ const posts = [
   },
 ];
 
-app.get("/v1/api/posts", async (c) => c.json(posts, 200));
+app.on(["POST", "GET"], "/api/auth/*", (c) => auth.handler(c.req.raw));
 
-app.get("/v1/api/post/:id", async (c) => {
+app.use(
+  "/api/auth/*",
+  cors({
+    origin: "http://localhost:8081",
+    credentials: true,
+  }),
+);
+
+app.get("/api/posts", async (c) => c.json(posts, 200));
+
+app.get("/api/post/:id", async (c) => {
   const post = posts.find((post) => post.id === c.req.param("id"));
 
   if (post === undefined) {
@@ -45,7 +58,7 @@ app.get("/v1/api/post/:id", async (c) => {
   return c.json(post, 200);
 });
 
-app.post("/v1/api/posts", async (c) => {
+app.post("/api/posts", async (c) => {
   const data = await c.req.json();
   const newPost = { id: String(Date.now()), ...data };
   posts.push(newPost);
