@@ -1,7 +1,7 @@
-import { createPost, getPosts } from "@/api/posts";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "expo-router";
 import { Button, ScrollView, StyleSheet, Text, View } from "react-native";
+import { createPost, getPosts } from "./../api/posts";
 
 export default function Index() {
   const client = useQueryClient();

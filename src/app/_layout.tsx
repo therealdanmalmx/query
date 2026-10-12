@@ -1,6 +1,6 @@
-import UseQueryFocus from "@/hooks/use-query-focus";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
+import UseQueryFocus from "../hooks/use-query-focus";
 
 const client = new QueryClient();
 

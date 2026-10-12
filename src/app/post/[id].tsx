@@ -1,7 +1,7 @@
-import { getPostById } from "@/api/posts";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
+import { getPostById } from "../../api/posts";
 
 export default function PostItem() {
   const { id } = useLocalSearchParams<{ id: string }>();
