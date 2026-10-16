@@ -9,17 +9,20 @@ export default function Index() {
   const session = authClient.useSession();
 
   const client = useQueryClient();
-  const { data, isLoading, isError, error } = useQuery(postsQueryOptions);
+  const { data, isFetching, isLoading, isError, error } =
+    useQuery(postsQueryOptions);
 
-  const postMutation = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationKey: ["posts"],
     mutationFn: createPost,
-    onSuccess: async (data) => {
-      client.invalidateQueries(postsQueryOptions);
+    onMutate: (data) => {
       client.setQueryData(postsQueryOptions.queryKey, (oldData: Post[]) => [
         ...oldData,
-        data,
+        { id: Date.now(), ...data },
       ]);
+    },
+    onSettled: () => {
+      client.invalidateQueries(postsQueryOptions);
     },
   });
 
@@ -44,8 +47,9 @@ export default function Index() {
       {session.data && (
         <Button
           title='Skapa inlägg'
+          disabled={isPending}
           onPress={() =>
-            postMutation.mutate({
+            mutate({
               title: "ExpressJS is shit",
               body: "Hono is the best most amazing life force. Happy sky.",
               author: "Hono Team",
