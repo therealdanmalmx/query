@@ -3,7 +3,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { auth } from "./lib/auth.ts";
 
-const app = new Hono().basePath("/v1");
+const app = new Hono();
 
 const posts = [
   {
@@ -46,9 +46,9 @@ app.use(
   }),
 );
 
-app.get("/api/posts", async (c) => c.json(posts, 200));
+app.get("/v1/api/posts", async (c) => c.json(posts, 200));
 
-app.get("/api/post/:id", async (c) => {
+app.get("/v1/api/post/:id", async (c) => {
   const post = posts.find((post) => post.id === c.req.param("id"));
 
   if (post === undefined) {
@@ -58,7 +58,7 @@ app.get("/api/post/:id", async (c) => {
   return c.json(post, 200);
 });
 
-app.post("/api/posts", async (c) => {
+app.post("/v1/api/posts", async (c) => {
   const data = await c.req.json();
   const newPost = { id: String(Date.now()), ...data };
   posts.push(newPost);
