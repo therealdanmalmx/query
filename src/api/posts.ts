@@ -19,7 +19,15 @@ export const getPostById = async (id: string) => {
 
 export const createPost = async (data: PostCreate) => {
   await sleep(4000);
-  throw new Error("no savy savy");
+  const res = await fetch("http://localhost:3000/v1/api/posts", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  return res.json() as Promise<Post>;
 };
 
 const sleep = async (delay: number) => {

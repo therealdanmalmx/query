@@ -49,6 +49,7 @@ app.use(
 app.get("/v1/api/posts", async (c) => c.json(posts, 200));
 
 app.get("/v1/api/post/:id", async (c) => {
+  await new Promise((resolve) => setTimeout(resolve, 4000));
   const post = posts.find((post) => post.id === c.req.param("id"));
 
   if (post === undefined) {

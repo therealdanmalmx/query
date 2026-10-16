@@ -1,14 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
+import { postQueryOptions } from "@/options/posts";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
-import { getPostById } from "../../api/posts";
 
 export default function PostItem() {
+  const client = useQueryClient();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["posts", id],
-    queryFn: () => getPostById(id),
-  });
+  const { data, isLoading, isError, error } = useQuery(
+    postQueryOptions(id, client),
+  );
 
   if (isLoading) {
     return <Text>Loading...</Text>;

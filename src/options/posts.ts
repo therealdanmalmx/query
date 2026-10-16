@@ -1,5 +1,8 @@
-import { getPosts } from "@/api/posts";
-import { UndefinedInitialDataOptions } from "@tanstack/react-query";
+import { getPostById, getPosts, Post } from "@/api/posts";
+import {
+  QueryClient,
+  UndefinedInitialDataOptions,
+} from "@tanstack/react-query";
 
 export const postsQueryOptions = {
   queryKey: ["posts"],
@@ -7,3 +10,12 @@ export const postsQueryOptions = {
   initialData: [],
   gcTime: 1000,
 } satisfies UndefinedInitialDataOptions;
+
+export const postQueryOptions = (id: string, client: QueryClient) =>
+  ({
+    queryKey: ["posts", id],
+    queryFn: () => getPostById(String(id)),
+    initialData: client
+      .getQueryData<Post[]>(["posts"])
+      ?.find((post) => post.id === id),
+  }) satisfies UndefinedInitialDataOptions;
