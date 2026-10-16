@@ -1,15 +1,17 @@
+import { api } from "@/lib/hono-client";
+import { parseResponse } from "hono/client";
+
 export interface Post {
   id: string;
   title: string;
   body: string;
   author: string;
-  publishedAt: string;
+  publishedAt: Date;
 }
 export type PostCreate = Omit<Post, "id">;
 
 export const getPosts = async () => {
-  const res = await fetch("http://localhost:3000/v1/api/posts");
-  return (await res.json()) as Promise<Post[]>;
+  return parseResponse(api.v1.api.posts.$get());
 };
 
 export const getPostById = async (id: string) => {
@@ -18,16 +20,7 @@ export const getPostById = async (id: string) => {
 };
 
 export const createPost = async (data: PostCreate) => {
-  await sleep(4000);
-  const res = await fetch("http://localhost:3000/v1/api/posts", {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
-
-  return res.json() as Promise<Post>;
+  return parseResponse(api.v1.api.posts.$post({ json: data }));
 };
 
 const sleep = async (delay: number) => {

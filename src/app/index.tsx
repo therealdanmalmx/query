@@ -53,7 +53,7 @@ export default function Index() {
               title: "ExpressJS is shit",
               body: "Hono is the best most amazing life force. Happy sky.",
               author: "Hono Team",
-              publishedAt: "2026-03-04T00:00:00.000Z",
+              publishedAt: new Date(),
             })
           }></Button>
       )}

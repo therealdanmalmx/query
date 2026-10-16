@@ -23,7 +23,7 @@ export default function PostItem() {
       <Text style={styles.title}>{data?.title}</Text>
       <Text style={styles.body}>{data?.body}</Text>
       <Text style={styles.body}>{data?.author}</Text>
-      <Text style={styles.body}>{data?.publishedAt.split("T")[0]}</Text>
+      <Text style={styles.body}>{data?.publishedAt?.toLocaleDateString()}</Text>
     </View>
   );
 }
