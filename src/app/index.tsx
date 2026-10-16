@@ -3,7 +3,7 @@ import { postsQueryOptions } from "@/options/posts";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "expo-router";
 import { Button, ScrollView, StyleSheet, Text, View } from "react-native";
-import { createPost } from "./../api/posts";
+import { createPost, Post } from "./../api/posts";
 
 export default function Index() {
   const session = authClient.useSession();
@@ -11,11 +11,15 @@ export default function Index() {
   const client = useQueryClient();
   const { data, isLoading, isError, error } = useQuery(postsQueryOptions);
 
-  const mutation = useMutation({
+  const postMutation = useMutation({
     mutationKey: ["posts"],
     mutationFn: createPost,
-    onSuccess: async () => {
-      await client.invalidateQueries(postsQueryOptions);
+    onSuccess: async (data) => {
+      client.invalidateQueries(postsQueryOptions);
+      client.setQueryData(postsQueryOptions.queryKey, (oldData: Post[]) => [
+        ...oldData,
+        data,
+      ]);
     },
   });
 
@@ -41,7 +45,7 @@ export default function Index() {
         <Button
           title='Skapa inlägg'
           onPress={() =>
-            mutation.mutate({
+            postMutation.mutate({
               title: "ExpressJS is shit",
               body: "Hono is the best most amazing life force. Happy sky.",
               author: "Hono Team",
